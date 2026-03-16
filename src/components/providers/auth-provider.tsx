@@ -10,6 +10,12 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE,
+  clearClientAuthCookies,
+  getClientCookie,
+} from "@/lib/auth-cookies";
 
 interface AuthContextValue {
   user: User | null;
@@ -29,6 +35,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let active = true;
 
     const loadSession = async () => {
+      const accessToken = getClientCookie(ACCESS_TOKEN_COOKIE);
+      const refreshToken = getClientCookie(REFRESH_TOKEN_COOKIE);
+
+      if (accessToken && refreshToken) {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+
+        if (!error) {
+          clearClientAuthCookies();
+        }
+      }
+
       const {
         data: { session: currentSession },
       } = await supabase.auth.getSession();

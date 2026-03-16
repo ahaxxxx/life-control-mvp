@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { getBaseUrl } from "@/lib/site-url";
 import { useAuth } from "@/components/providers/auth-provider";
 
 export default function SignupPage() {
@@ -28,6 +29,9 @@ export default function SignupPage() {
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${getBaseUrl()}/auth/callback`,
+      },
     });
 
     if (signUpError) {
@@ -36,7 +40,7 @@ export default function SignupPage() {
       return;
     }
 
-    router.replace("/dashboard");
+    router.replace("/login");
   };
 
   return (
@@ -44,7 +48,9 @@ export default function SignupPage() {
       <div className="w-full max-w-md rounded-3xl border border-line bg-white p-6 shadow-sm">
         <div className="mb-6 space-y-2">
           <h1 className="text-2xl font-semibold text-ink">Signup</h1>
-          <p className="text-sm text-slate-500">Create an account with email and password.</p>
+          <p className="text-sm text-slate-500">
+            Create an account with email and password.
+          </p>
         </div>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <label className="block space-y-2">
@@ -77,6 +83,9 @@ export default function SignupPage() {
             {submitting ? "Creating..." : "Signup"}
           </button>
         </form>
+        <p className="mt-4 text-sm text-slate-500">
+          Check your email after signup to confirm your account.
+        </p>
         <p className="mt-5 text-sm text-slate-600">
           Already have an account?{" "}
           <Link href="/login" className="font-medium text-accent">

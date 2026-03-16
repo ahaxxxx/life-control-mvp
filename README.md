@@ -8,6 +8,14 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
+# Env
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
 # Vercel
 
 ```bash
@@ -15,8 +23,22 @@ npm install -g vercel
 vercel
 ```
 
-1. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in the Vercel project settings.
-2. Redeploy after environment variables are saved.
+1. Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `NEXT_PUBLIC_SITE_URL` in the Vercel project settings.
+2. Set `NEXT_PUBLIC_SITE_URL` to your production domain, for example `https://your-project.vercel.app`.
+3. Redeploy after environment variables are saved.
+
+# Supabase Auth Redirects
+
+Supabase Dashboard -> Authentication -> URL Configuration
+
+```text
+Site URL:
+https://your-project.vercel.app
+
+Redirect URLs:
+http://localhost:3000/auth/callback
+https://your-project.vercel.app/auth/callback
+```
 
 # Supabase SQL
 
